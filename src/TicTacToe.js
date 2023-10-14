@@ -19,6 +19,9 @@ module.exports = class TicTacToe extends approve {
     if (!options.embed.statusTitle) options.embed.statusTitle = 'Status';
     if (!options.embed.overTitle) options.embed.overTitle = 'Game Over';
     if (!options.embed.color) options.embed.color = '#5865F2';
+     // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
+    if (!options.embed.footer) options.embed.footer = {};
+    if (!options.embed.timestamp) options.embed.timestamp = false;
 
     if (!options.emojis) options.emojis = {};
     if (!options.emojis.xButton) options.emojis.xButton = '❌';
@@ -57,7 +60,6 @@ module.exports = class TicTacToe extends approve {
       if (typeof options.playerOnlyMessage !== 'string') throw new TypeError('INVALID_MESSAGE: playerOnly Message option must be a string.');
     }
 
-
     super(options);
     this.options = options;
     this.message = options.message;
@@ -75,7 +77,7 @@ module.exports = class TicTacToe extends approve {
 
   async startGame() {
     if (this.options.isSlashGame || !this.message.author) {
-      if (!this.message.deferred) await this.message.deferReply().catch(e => {});
+      if (!this.message.deferred) await this.message.deferReply().catch(e => { });
       this.message.author = this.message.user;
       this.options.isSlashGame = true;
     }
@@ -84,26 +86,40 @@ module.exports = class TicTacToe extends approve {
     if (approve) this.TicTacToeGame(approve);
   }
 
-
+  // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
   async TicTacToeGame(msg) {
-
     const embed = new EmbedBuilder()
-    .setColor(this.options.embed.color)
-    .setTitle(this.options.embed.title)
-    .setFooter({ text: this.message.author.tag + ' vs ' + this.opponent.tag })
-    .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() }) 
+      .setColor(this.options.embed.color)
+      .setTitle(this.options.embed.title)
+      .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() });
+
+    if (this.options.embed.timestamp) {
+      embed.setTimestamp();
+    }
+
+    if (this.options.embed.footer.iconURL) {
+      embed.setFooter({
+        text: this.options.embed.footer.text,
+      });
+    }
+    else (!this.options.embed.footer.iconURL); {
+      embed.setFooter({
+        text: this.options.embed.footer.text,
+        iconURL: this.options.embed.footer.iconURL
+      });
+    };
+
 
     await msg.edit({ content: null, embeds: [embed], components: this.getComponents() });
     this.handleButtons(msg);
   }
-
 
   handleButtons(msg) {
     const collector = msg.createMessageComponentCollector({ idle: this.options.timeoutTime });
 
 
     collector.on('collect', async btn => {
-      await btn.deferUpdate().catch(e => {});
+      await btn.deferUpdate().catch(e => { });
       if (btn.user.id !== this.message.author.id && btn.user.id !== this.opponent.id) {
         if (this.options.playerOnlyMessage) btn.followUp({ content: formatMessage(this.options, 'playerOnlyMessage'), ephemeral: true });
         return;
@@ -114,14 +130,30 @@ module.exports = class TicTacToe extends approve {
       if (this.hasWonGame(1) || this.hasWonGame(2) || !this.gameBoard.includes(0)) collector.stop();
       if (this.hasWonGame(1) || this.hasWonGame(2)) return this.gameOver(msg, 'win');
       if (!this.gameBoard.includes(0)) return this.gameOver(msg, 'tie');
-      this.player1Turn = !this.player1Turn;  
+      this.player1Turn = !this.player1Turn;
 
-
+      // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
       const embed = new EmbedBuilder()
-      .setColor(this.options.embed.color)
-      .setTitle(this.options.embed.title)
-      .setFooter({ text: this.message.author.tag + ' vs ' + this.opponent.tag })
-      .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() }) 
+        .setColor(this.options.embed.color)
+        .setTitle(`${this.options.embed.title}`)
+        .setDescription(`***${this.message.author.tag} vs ${this.opponent.tag}***`)
+        .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() })
+
+      if (this.options.embed.timestamp) {
+        embed.setTimestamp();
+      }
+
+      if (this.options.embed.footer.iconURL) {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+        });
+      }
+      else (!this.options.embed.footer.iconURL); {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+          iconURL: this.options.embed.footer.iconURL
+        });
+      };
 
       return await msg.edit({ embeds: [embed], components: this.getComponents() });
     })
@@ -138,12 +170,27 @@ module.exports = class TicTacToe extends approve {
     if (result === 'win') TicTacToeGame.winner = this.hasWonGame(1) ? this.message.author.id : this.opponent.id;
     this.emit('gameOver', { result: result, ...TicTacToeGame });
 
-
+    // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
     const embed = new EmbedBuilder()
-    .setColor(this.options.embed.color)
-    .setTitle(this.options.embed.title)
-    .setFooter({ text: this.message.author.tag + ' vs ' + this.opponent.tag })
-    .addFields({ name: this.options.embed.overTitle, value: this.getTurnMessage(result + 'Message') })
+      .setColor(this.options.embed.color)
+      .setTitle(this.options.embed.title)
+      .addFields({ name: this.options.embed.overTitle, value: this.getTurnMessage(result + 'Message') })
+
+      if (this.options.embed.timestamp) {
+        embed.setTimestamp();
+      }
+
+      if (this.options.embed.footer.iconURL) {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+        });
+      }
+      else (!this.options.embed.footer.iconURL); {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+          iconURL: this.options.embed.footer.iconURL
+        });
+      };
 
     return await msg.edit({ embeds: [embed], components: disableButtons(this.getComponents()) });
   }
@@ -162,10 +209,10 @@ module.exports = class TicTacToe extends approve {
       return true;
     }
     for (let i = 0; i < 3; ++i) {
-      if (this.gameBoard[i*3] === this.gameBoard[i*3+1] && this.gameBoard[i*3] === this.gameBoard[i*3+2] && this.gameBoard[i*3] === player) {
+      if (this.gameBoard[i * 3] === this.gameBoard[i * 3 + 1] && this.gameBoard[i * 3] === this.gameBoard[i * 3 + 2] && this.gameBoard[i * 3] === player) {
         return true;
       }
-      if (this.gameBoard[i] === this.gameBoard[i+3] && this.gameBoard[i] === this.gameBoard[i+6] && this.gameBoard[i] === player) {
+      if (this.gameBoard[i] === this.gameBoard[i + 3] && this.gameBoard[i] === this.gameBoard[i + 6] && this.gameBoard[i] === player) {
         return true;
       }
     }
@@ -184,8 +231,8 @@ module.exports = class TicTacToe extends approve {
 
   getButton(btn) {
     if (btn === 1) return { emoji: this.options.emojis.xButton, style: this.options.xButtonStyle };
-    else if (btn === 2) return { emoji: this.options.emojis.oButton, style: this.options.oButtonStyle  };
-    else return { emoji: this.options.emojis.blankButton , style: 'SECONDARY' };
+    else if (btn === 2) return { emoji: this.options.emojis.oButton, style: this.options.oButtonStyle };
+    else return { emoji: this.options.emojis.blankButton, style: 'SECONDARY' };
   }
 
 

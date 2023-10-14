@@ -7,6 +7,9 @@ module.exports = class Approve extends events {
   constructor(options = {}) {
 
     if (!options.embed) options.embed = {};
+    // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
+    if (!options.embed.footer) options.embed.footer = {};
+    if (!options.embed.timestamp) options.embed.timestamp = false;
     if (!options.embed.requestTitle) options.embed.requestTitle = options.embed.title;
     if (!options.embed.requestColor) options.embed.requestColor = options.embed.color;
     if (!options.embed.rejectTitle) options.embed.rejectTitle = options.embed.title;
@@ -28,7 +31,7 @@ module.exports = class Approve extends events {
     this.opponent = options.opponent;
   }
 
-  
+
   async sendMessage(content) {
     if (this.options.isSlashGame) return await this.message.editReply(content);
     else return await this.message.channel.send(content);
@@ -37,35 +40,82 @@ module.exports = class Approve extends events {
 
   async approve() {
     return new Promise(async resolve => {
-
+      // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
       const embed = new EmbedBuilder()
-      .setColor(this.options.embed.requestColor)
-      .setTitle(this.options.embed.requestTitle)
-      .setDescription(formatMessage(this.options, 'requestMessage'));
+        .setColor(this.options.embed.requestColor)
+        .setTitle(this.options.embed.requestTitle)
+        .setDescription(formatMessage(this.options, 'requestMessage'))
+
+      if (this.options.embed.timestamp) {
+        embed.setTimestamp();
+      }
+
+      if (this.options.embed.footer.iconURL) {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+        });
+      }
+      else (!this.options.embed.footer.iconURL); {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+          iconURL: this.options.embed.footer.iconURL
+        });
+      };
 
       const btn1 = new ButtonBuilder().setLabel(this.options.buttons.accept).setCustomId('approve_accept').setStyle('SUCCESS');
       const btn2 = new ButtonBuilder().setLabel(this.options.buttons.reject).setCustomId('approve_reject').setStyle('DANGER');
       const row = new ActionRowBuilder().addComponents(btn1, btn2);
 
-      const content = this.options.mentionUser ? '<@!'+this.opponent.id+'>' : null;
+      const content = this.options.mentionUser ? '<@!' + this.opponent.id + '>' : null;
       const msg = await this.sendMessage({ content, embeds: [embed], components: [row], allowedMentions: { parse: ['users'] } });
       const collector = msg.createMessageComponentCollector({ time: this.options.reqTimeoutTime });
 
 
       collector.on('collect', async btn => {
-        await btn.deferUpdate().catch(e => {});
+        await btn.deferUpdate().catch(e => { });
         if (btn.user.id === this.opponent.id) collector.stop(btn.customId.split('_')[1]);
       })
 
       collector.on('end', async (_, reason) => {
         if (reason === 'accept') return resolve(msg);
-
+        // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
         const embed = new EmbedBuilder()
-        .setColor(this.options.embed.rejectColor)
-        .setTitle(this.options.embed.rejectTitle)
-        .setDescription(formatMessage(this.options, 'rejectMessage'))
+          .setColor(this.options.embed.rejectColor)
+          .setTitle(this.options.embed.rejectTitle)
+          .setDescription(formatMessage(this.options, 'rejectMessage'))
+
+        if (this.options.embed.timestamp) {
+          embed.setTimestamp();
+        }
+
+        if (this.options.embed.footer.iconURL) {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+          });
+        }
+        else (!this.options.embed.footer.iconURL); {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+            iconURL: this.options.embed.footer.iconURL
+          });
+        };
 
         if (reason === 'time') embed.setDescription(formatMessage(this.options, 'reqTimeoutMessage'));
+        if (this.options.embed.timestamp) {
+          embed.setTimestamp();
+        }
+
+        if (this.options.embed.footer.iconURL) {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+          });
+        }
+        else (!this.options.embed.footer.iconURL); {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+            iconURL: this.options.embed.footer.iconURL
+          });
+        };
         this.emit('gameOver', { result: reason, player: this.message.author, opponent: this.opponent });
         await msg.edit({ content: null, embeds: [embed], components: [] });
         return resolve(false);
