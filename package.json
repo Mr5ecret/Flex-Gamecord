@@ -1,6 +1,6 @@
 {
   "name": "flex-gamecord",
-  "version": "dev-4.2.1",
+  "version": "4.2.1-dev",
   "description": "Discord Gamecord is a powerful npm package with a collection of minigames for your discord bot",
   "main": "index.js",
   "scripts": {
