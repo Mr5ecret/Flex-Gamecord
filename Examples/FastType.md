@@ -1,7 +1,7 @@
 # **📝 FastType**
 
 ```js
-const { FastType } = require('discord-gamecord');
+const { FastType } = require('flex-gamecord');
 
 const Game = new FastType({
   message: message,

@@ -1,7 +1,7 @@
 # **🐟 Fishy**
 
 ```js
-const { Fishy } = require('discord-gamecord');
+const { Fishy } = require('flex-gamecord');
 let player = {};
 
 const Game = new Fishy({

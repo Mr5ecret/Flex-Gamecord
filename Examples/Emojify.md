@@ -1,8 +1,8 @@
 # **😄 Emojify**
 
 ```js
-const { Emojify } = require('discord-gamecord');
+const { Emojify } = require('flex-gamecord');
 const Text = 'Discord Gamecord';
 
-<channel>.send(await Emojify(Text));
+channel.send(await Emojify(Text));
 ```

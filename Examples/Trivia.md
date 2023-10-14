@@ -1,7 +1,7 @@
 # **❔ Trivia**
 
 ```js
-const { Trivia } = require('discord-gamecord');
+const { Trivia } = require('flex-gamecord');
 
 const Game = new Trivia({
   message: message,

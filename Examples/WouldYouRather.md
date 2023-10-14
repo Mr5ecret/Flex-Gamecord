@@ -1,7 +1,7 @@
 # **🔖 Would You Rather**
 
 ```js
-const { WouldYouRather } = require('discord-gamecord');
+const { WouldYouRather } = require('flex-gamecord');
 
 const Game = new WouldYouRather({
   message: message,

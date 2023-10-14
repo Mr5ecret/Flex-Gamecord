@@ -1,7 +1,7 @@
 # **🐍 Snake Game**
 
 ```js
-const { Snake } = require('discord-gamecord');
+const { Snake } = require('flex-gamecord');
 
 const Game = new Snake({
   message: message,

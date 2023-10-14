@@ -1,4 +1,4 @@
-# **FLEX-GAMECORD**
+# **flex-gamecordrequire('flex-gamecord');**
 
 <p align="center">
   <img src="https://cdn.discordapp.com/attachments/818900078077018162/1042159279597166682/banner.png" alt="gamecord" />
@@ -28,9 +28,9 @@
 
 ## **⚙️ Installation** 
 
-### Install Flex-Gamecord discord.js v14 use
+### Install flex-gamecordrequire('flex-gamecord'); discord.js v14 use
 ```sh
-npm i https://github.com/Mr5ecret/Flex-Gamecord.git
+npm i https://github.com/Mr5ecret/flex-gamecordrequire('flex-gamecord');.git
 ```
 
 ## **✨ Features**
@@ -43,7 +43,7 @@ npm i https://github.com/Mr5ecret/Flex-Gamecord.git
 
 ## **📚 Usage**
 ```js
-const { TicTacToe } = require('discord-gamecord');
+const { TicTacToe } = flex-gamecordrequire('flex-gamecord');
 
 try {
     const opponent = interaction.options.getUser('opponent');

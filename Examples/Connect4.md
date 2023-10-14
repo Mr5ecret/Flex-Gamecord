@@ -1,8 +1,8 @@
 # **🔢 Connect 4**
 
 ```js
-const { Connect4 } = require('discord-gamecord');
-
+const { Connect4 } = require('flex-gamecord');
+require('flex-gamecord');
 const Game = new Connect4({
   message: message,
   isSlashGame: false,
