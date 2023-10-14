@@ -28,9 +28,9 @@
 
 ## **⚙️ Installation** 
 
-### Install flex-gamecordrequire('flex-gamecord'); discord.js v14 use
+### Install flex-gamecord discord.js v14 use
 ```sh
-npm i https://github.com/Mr5ecret/flex-gamecordrequire('flex-gamecord');.git
+npm i https://github.com/Mr5ecret/flex-gamecord.git
 ```
 
 ## **✨ Features**
@@ -43,7 +43,7 @@ npm i https://github.com/Mr5ecret/flex-gamecordrequire('flex-gamecord');.git
 
 ## **📚 Usage**
 ```js
-const { TicTacToe } = flex-gamecordrequire('flex-gamecord');
+const { TicTacToe } = require('flex-gamecord');
 
 try {
     const opponent = interaction.options.getUser('opponent');
