@@ -1,5 +1,14 @@
-# **flex-gamecord**
+<div align="center">
+  <img src="https://github.com/Paeonic-Development/.github/blob/main/images/Paeonic.png" alt="PΛΞ0NIC Development Banner">
+</div>
 
+
+<div align="center">
+  <h3>Edited By Mr5ecret X PΛΞ0NIC Development</h3>
+  <h4>Used in PΛΞ0NIC Development Discord Bot!</h4>
+</div>
+
+---
 <p align="center">
   <img src="https://cdn.discordapp.com/attachments/818900078077018162/1042159279597166682/banner.png" alt="gamecord" />
 </p>
@@ -14,17 +23,7 @@
   </a>
 </p>
 
-<p align="center">
-  <h1>Edited By Mr5ecret X PΛΞ0NIC Development</h1>
-</p>
-
-```diff
-* Update [dev-4.2.1]
-+ Added footer/timestamp options
-```
-
 > **Discord Gamecord is a powerful npm package with a collection of minigames for your discord bot :)**
-
 
 ## **⚙️ Installation** 
 
@@ -95,7 +94,3 @@ try {
 
 ## **📷 Preview**
 <img src="https://cdn.discordapp.com/attachments/818900078077018162/1042159356780757072/Preview.png">
-
-## **❔ Support**
-<a href="https://discord.gg/invite/GaczkwfgV9"><img src="https://invidget.switchblade.xyz/GaczkwfgV9" alt="Discord"></a>
-

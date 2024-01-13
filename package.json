@@ -1,34 +1,35 @@
 {
-  "name": "flex-gamecord",
-  "version": "4.2.1-dev",
-  "description": "Discord Gamecord is a powerful npm package with a collection of minigames for your discord bot",
-  "main": "index.js",
-  "scripts": {
-    "test": "cd test && node ."
-  },
-  "author": "Aniket#0729",
-  "contributor": "Mr5ecret",
-  "license": "MIT",
-  "dependencies": {
-    "discord.js": "^14.6.0",
-    "html-entities": "^2.3.3",
-    "node-fetch": "^2.6.7"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+git@github.com:Mr5ecret/Flex-Gamecord.git"
-  },
-  "homepage": "https://discord-gamecord.js.org/",
-  "keywords": [
-    "discord-gamecord",
-    "discord-games",
-    "discord.js",
-    "minigames"
-  ],
-  "bugs": {
-    "url": "https://github.com/Mr5ecret/Flex-Gamecord/issues"
-  },
-  "directories": {
-    "src": "src"
-  }
+ "name": "flex-gamecord",
+ "version": "4.2.1-dev",
+ "description": "Discord Gamecord is a powerful npm package with a collection of minigames for your discord bot",
+ "main": "index.js",
+ "scripts": {
+  "test": "cd test && node ."
+ },
+ "author": "Aniket#0729",
+ "contributor": "Mr5ecret",
+ "license": "MIT",
+ "dependencies": {
+  "discord.js": "^14.6.0",
+  "html-entities": "^2.3.3",
+  "node-fetch": "^2.6.7"
+ },
+ "repository": {
+  "type": "git",
+  "url": "git+git@github.com:Mr5ecret/Flex-Gamecord.git"
+ },
+ "homepage": "https://discord-gamecord.js.org/",
+ "keywords": [
+  "discord-gamecord",
+  "discord-games",
+  "discord.js",
+  "minigames",
+  "paeonic"
+ ],
+ "bugs": {
+  "url": "https://github.com/Mr5ecret/Flex-Gamecord/issues"
+ },
+ "directories": {
+  "src": "src"
+ }
 }
