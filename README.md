@@ -29,7 +29,7 @@
 
 ### Install flex-gamecord discord.js v14 use
 ```sh
-npm i https://github.com/Mr5ecret/flex-gamecord.git
+npm i github:Paeonic-Development/Flex-Gamecord
 ```
 
 ## **✨ Features**
