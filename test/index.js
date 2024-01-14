@@ -1,10 +1,10 @@
 const Discord = require('discord.js');
-const client = new Discord.Client({ intents: [ 1, 512, 4096, 32768 ] });
+const client = new Discord.Client({ intents: [1, 512, 4096, 32768] });
 const { Snake } = require('../index');
 
 
 client.on('messageCreate', async (message) => {
-  if(message.content === '!snake') {
+  if (message.content === '!snake') {
     const Game = new Snake({
       message: message,
       isSlashGame: false,
@@ -16,7 +16,7 @@ client.on('messageCreate', async (message) => {
       emojis: {
         board: '⬛',
         food: '🍎',
-        up: '⬆️', 
+        up: '⬆️',
         down: '⬇️',
         left: '⬅️',
         right: '➡️',
@@ -27,7 +27,7 @@ client.on('messageCreate', async (message) => {
       foods: ['🍎', '🍇', '🍊', '🫐', '🥕', '🥝', '🌽'],
       playerOnlyMessage: 'Only {player} can use these buttons.'
     });
-    
+
     Game.startGame();
     Game.on('gameOver', result => {
       console.log(result);

@@ -1,8 +1,8 @@
 const { EmbedBuilder, ActionRowBuilder, AttachmentBuilder } = require('discord.js');
 const { disableButtons, formatMessage, move, oppDirection, ButtonBuilder } = require('../utils/utils');
-const chars = '0123456789abcdefghijklmnopqrstuvwxyz';
 const events = require('events');
-
+const { createCanvas, loadImage } = require('canvas');
+const path = require('path');
 
 module.exports = class TwoZeroFourEight extends events {
   constructor(options = {}) {
@@ -11,7 +11,6 @@ module.exports = class TwoZeroFourEight extends events {
     if (!options.message) throw new TypeError('NO_MESSAGE: No message option was provided.');
     if (typeof options.message !== 'object') throw new TypeError('INVALID_MESSAGE: message option must be an object.');
     if (typeof options.isSlashGame !== 'boolean') throw new TypeError('INVALID_COMMAND_TYPE: isSlashGame option must be a boolean.');
-
 
     if (!options.embed) options.embed = {};
     if (!options.embed.title) options.embed.title = '2048';
@@ -22,10 +21,9 @@ module.exports = class TwoZeroFourEight extends events {
     if (!options.emojis.down) options.emojis.down = '⬇️';
     if (!options.emojis.left) options.emojis.left = '⬅️';
     if (!options.emojis.right) options.emojis.right = '➡️';
-    
+
     if (!options.timeoutTime) options.timeoutTime = 60000;
     if (!options.buttonStyle) options.buttonStyle = 'PRIMARY';
-
 
     if (typeof options.embed !== 'object') throw new TypeError('INVALID_EMBED: embed option must be an object.');
     if (typeof options.embed.title !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
@@ -42,7 +40,6 @@ module.exports = class TwoZeroFourEight extends events {
       if (typeof options.playerOnlyMessage !== 'string') throw new TypeError('INVALID_MESSAGE: playerOnlyMessage option must be a string.');
     }
 
-
     super();
     this.options = options;
     this.message = options.message;
@@ -58,21 +55,45 @@ module.exports = class TwoZeroFourEight extends events {
     }
   }
 
-
   async sendMessage(content) {
     if (this.options.isSlashGame) return await this.message.editReply(content);
     else return await this.message.channel.send(content);
   }
 
   async getBoardImage() {
-    const url = 'https://api.aniket091.xyz/2048?board=' + this.gameBoard.map(c => chars[c]).join('');
-    return await new AttachmentBuilder(url, { name: 'gameboard.png' });
-  }
+    const canvas = createCanvas(this.length * 100, this.length * 100);
+    const ctx = canvas.getContext('2d');
+    const imageFilenames = [
+      '0.png', '2.png', '4.png', '8.png', '16.png', '32.png', '64.png', '128.png', '256.png', '512.png', '1024.png', '2048.png',
+    ];
 
+    const images = {};
+    for (let i = 0; i < imageFilenames.length; i++) {
+      const imagePath = path.join(__dirname, 'boardImages', imageFilenames[i]);
+      images[i] = await loadImage(imagePath).catch(err => {
+        console.error(`Error loading image: ${imagePath}`);
+        throw err;
+      });
+    }
+
+    for (let y = 0; y < this.length; y++) {
+      for (let x = 0; x < this.length; x++) {
+        const tileValue = this.gameBoard[y * this.length + x];
+        const tileImage = images[tileValue];
+
+        if (tileImage) {
+          ctx.drawImage(tileImage, x * 100, y * 100, 100, 100);
+        }
+      }
+    }
+
+    const buffer = canvas.toBuffer();
+    return new AttachmentBuilder(buffer, { name: 'gameboard.png' });
+  }
 
   async startGame() {
     if (this.options.isSlashGame || !this.message.author) {
-      if (!this.message.deferred) await this.message.deferReply().catch(e => {});
+      if (!this.message.deferred) await this.message.deferReply().catch(e => { });
       this.message.author = this.message.user;
       this.options.isSlashGame = true;
     }
@@ -81,11 +102,11 @@ module.exports = class TwoZeroFourEight extends events {
 
 
     const embed = new EmbedBuilder()
-    .setTitle(this.options.embed.title)
-    .setColor(this.options.embed.color)
-    .setImage('attachment://gameboard.png')
-    .addFields({ name: 'Current Score', value: this.score.toString() })
-    .setFooter({ text: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
+      .setTitle(this.options.embed.title)
+      .setColor(this.options.embed.color)
+      .setImage('attachment://gameboard.png')
+      .addFields({ name: 'Current Score', value: this.score.toString() })
+      .setFooter({ text: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
 
 
     const up = new ButtonBuilder().setEmoji(this.options.emojis.up).setStyle(this.options.buttonStyle).setCustomId('2048_up');
@@ -115,7 +136,7 @@ module.exports = class TwoZeroFourEight extends events {
 
 
     collector.on('collect', async btn => {
-      await btn.deferUpdate().catch(e => {});
+      await btn.deferUpdate().catch(e => { });
       if (btn.user.id !== this.message.author.id) {
         if (this.options.playerOnlyMessage) btn.followUp({ content: formatMessage(this.options, 'playerOnlyMessage'), ephemeral: true });
         return;
@@ -132,11 +153,11 @@ module.exports = class TwoZeroFourEight extends events {
 
 
       const embed = new EmbedBuilder()
-      .setTitle(this.options.embed.title)
-      .setColor(this.options.embed.color)
-      .setImage('attachment://gameboard.png')
-      .addFields({ name: 'Current Score', value: this.score.toString() })
-      .setFooter({ text: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
+        .setTitle(this.options.embed.title)
+        .setColor(this.options.embed.color)
+        .setImage('attachment://gameboard.png')
+        .addFields({ name: 'Current Score', value: this.score.toString() })
+        .setFooter({ text: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
 
       return msg.edit({ embeds: [embed], files: [await this.getBoardImage()], attachments: [] });
     })
@@ -154,11 +175,11 @@ module.exports = class TwoZeroFourEight extends events {
     this.emit('gameOver', { result: (result ? 'win' : 'lose'), ...TwoZeroFourEightGame });
 
     const embed = new EmbedBuilder()
-    .setTitle(this.options.embed.title)
-    .setColor(this.options.embed.color)
-    .setImage('attachment://gameboard.png')
-    .addFields({ name: 'Total Score', value: this.score.toString() })
-    .setFooter({ text: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
+      .setTitle(this.options.embed.title)
+      .setColor(this.options.embed.color)
+      .setImage('attachment://gameboard.png')
+      .addFields({ name: 'Total Score', value: this.score.toString() })
+      .setFooter({ text: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
 
     return msg.edit({ embeds: [embed], components: disableButtons(msg.components), files: [await this.getBoardImage()], attachments: [] });
   }
@@ -174,7 +195,7 @@ module.exports = class TwoZeroFourEight extends events {
         const posNum = this.gameBoard[y * this.length + x];
 
         ['down', 'left', 'right', 'up'].forEach(dir => {
-          const newPos = move({x, y}, dir);
+          const newPos = move({ x, y }, dir);
           if (this.isInsideBlock(newPos) && (this.gameBoard[newPos.y * this.length + newPos.x] === 0 || this.gameBoard[newPos.y * this.length + newPos.x] === posNum)) numMoves++;
         })
       }

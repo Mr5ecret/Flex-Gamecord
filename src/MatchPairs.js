@@ -20,8 +20,8 @@ module.exports = class MatchPairs extends events {
     if (!options.timeoutTime) options.timeoutTime = 60000;
     if (!options.emojis) options.emojis = ['🍉', '🍇', '🍊', '🍋', '🥭', '🍎', '🍏', '🥝', '🥥', '🍓', '🍒', '🫐', '🍍', '🍅', '🍐', '🥔', '🌽', '🥕', '🥬', '🥦'];
     if (!options.winMessage) options.winMessage = '**You won the Game! You turned a total of `{tilesTurned}` tiles.**';
-    if (!options.loseMessage) options.loseMessage = '**You lost the Game! You turned a total of `{tilesTurned}` tiles.**'; 
-    
+    if (!options.loseMessage) options.loseMessage = '**You lost the Game! You turned a total of `{tilesTurned}` tiles.**';
+
 
     if (typeof options.embed !== 'object') throw new TypeError('INVALID_EMBED: embed option must be an object.');
     if (typeof options.embed.title !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
@@ -37,7 +37,7 @@ module.exports = class MatchPairs extends events {
       if (typeof options.playerOnlyMessage !== 'string') throw new TypeError('INVALID_MESSAGE: playerOnly Message option must be a string.');
     }
 
-    
+
     super();
     this.options = options;
     this.message = options.message;
@@ -58,11 +58,11 @@ module.exports = class MatchPairs extends events {
 
   async startGame() {
     if (this.options.isSlashGame || !this.message.author) {
-      if (!this.message.deferred) await this.message.deferReply().catch(e => {});
+      if (!this.message.deferred) await this.message.deferReply().catch(e => { });
       this.message.author = this.message.user;
       this.options.isSlashGame = true;
     }
-    
+
     this.emojis = shuffleArray(this.emojis).slice(0, 12);
     this.emojis.push(...this.emojis, '🃏');
     this.emojis = shuffleArray(this.emojis);
@@ -70,10 +70,10 @@ module.exports = class MatchPairs extends events {
 
 
     const embed = new EmbedBuilder()
-    .setColor(this.options.embed.color)
-    .setTitle(this.options.embed.title)
-    .setDescription(this.options.embed.description)
-    .setAuthor({ name: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
+      .setColor(this.options.embed.color)
+      .setTitle(this.options.embed.title)
+      .setDescription(this.options.embed.description)
+      .setAuthor({ name: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
 
     const msg = await this.sendMessage({ embeds: [embed], components: this.components });
     return this.handleButtons(msg);
@@ -113,10 +113,10 @@ module.exports = class MatchPairs extends events {
 
 
     const embed = new EmbedBuilder()
-    .setColor(this.options.embed.color)
-    .setTitle(this.options.embed.title)
-    .setDescription(GameOverMessage.replace('{tilesTurned}', this.tilesTurned))
-    .setAuthor({ name: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
+      .setColor(this.options.embed.color)
+      .setTitle(this.options.embed.title)
+      .setDescription(GameOverMessage.replace('{tilesTurned}', this.tilesTurned))
+      .setAuthor({ name: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
 
     return msg.edit({ embeds: [embed], components: disableButtons(this.components) });
   }
@@ -126,7 +126,7 @@ module.exports = class MatchPairs extends events {
     const collector = msg.createMessageComponentCollector({ idle: this.options.time });
 
     collector.on('collect', async btn => {
-      await btn.deferUpdate().catch(e => {});
+      await btn.deferUpdate().catch(e => { });
       if (btn.user.id !== this.message.author.id) {
         if (this.options.playerOnlyMessage) btn.followUp({ content: formatMessage(this.options, 'playerOnlyMessage'), ephemeral: true });
         return;
@@ -140,7 +140,7 @@ module.exports = class MatchPairs extends events {
       const emojiBtn = this.components[y].components[x];
       this.tilesTurned += 1;
 
-      
+
       if (!this.selected) {
         this.selected = { x: x, y: y, id: id };
         emojiBtn.setEmoji(emoji).setStyle('PRIMARY').removeLabel();
@@ -171,7 +171,7 @@ module.exports = class MatchPairs extends events {
           await msg.edit({ components: this.components });
           emojiBtn.removeEmoji().setStyle('SECONDARY').setLabel('\u200b');
           selectedBtn.removeEmoji().setStyle('SECONDARY').setLabel('\u200b');
-          return this.selected = null;;
+          return this.selected = null;
         }
 
         this.remainingPairs -= 1;
@@ -182,7 +182,7 @@ module.exports = class MatchPairs extends events {
       if (this.remainingPairs === 0) return collector.stop();
       return await msg.edit({ components: this.components });
     })
-    
+
 
     collector.on('end', async (_, reason) => {
       if (reason === 'idle') return this.gameOver(msg, false);
