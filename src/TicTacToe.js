@@ -19,9 +19,7 @@ module.exports = class TicTacToe extends approve {
     if (!options.embed.statusTitle) options.embed.statusTitle = 'Status';
     if (!options.embed.overTitle) options.embed.overTitle = 'Game Over';
     if (!options.embed.color) options.embed.color = '#5865F2';
-     // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
     if (!options.embed.footer) options.embed.footer = {};
-    if (!options.embed.timestamp) options.embed.timestamp = false;
 
     if (!options.emojis) options.emojis = {};
     if (!options.emojis.xButton) options.emojis.xButton = '❌';
@@ -68,12 +66,10 @@ module.exports = class TicTacToe extends approve {
     this.player1Turn = true;
   }
 
-
   async sendMessage(content) {
     if (this.options.isSlashGame) return await this.message.editReply(content);
     else return await this.message.channel.send(content);
   }
-
 
   async startGame() {
     if (this.options.isSlashGame || !this.message.author) {
@@ -86,7 +82,6 @@ module.exports = class TicTacToe extends approve {
     if (approve) this.TicTacToeGame(approve);
   }
 
-  // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
   async TicTacToeGame(msg) {
     const embed = new EmbedBuilder()
       .setColor(this.options.embed.color)
@@ -97,18 +92,19 @@ module.exports = class TicTacToe extends approve {
       embed.setTimestamp();
     }
 
-    if (this.options.embed.footer.iconURL) {
-      embed.setFooter({
-        text: this.options.embed.footer.text,
-      });
+    if (this.options.embed.footerEnabled) {
+      if (this.options.embed.footer.iconURL) {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+        });
+      }
+      else (!this.options.embed.footer.iconURL); {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+          iconURL: this.options.embed.footer.iconURL
+        });
+      };
     }
-    else (!this.options.embed.footer.iconURL); {
-      embed.setFooter({
-        text: this.options.embed.footer.text,
-        iconURL: this.options.embed.footer.iconURL
-      });
-    };
-
 
     await msg.edit({ content: null, embeds: [embed], components: this.getComponents() });
     this.handleButtons(msg);
@@ -116,7 +112,6 @@ module.exports = class TicTacToe extends approve {
 
   handleButtons(msg) {
     const collector = msg.createMessageComponentCollector({ idle: this.options.timeoutTime });
-
 
     collector.on('collect', async btn => {
       await btn.deferUpdate().catch(e => { });
@@ -132,7 +127,6 @@ module.exports = class TicTacToe extends approve {
       if (!this.gameBoard.includes(0)) return this.gameOver(msg, 'tie');
       this.player1Turn = !this.player1Turn;
 
-      // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
       const embed = new EmbedBuilder()
         .setColor(this.options.embed.color)
         .setTitle(`${this.options.embed.title}`)
@@ -143,17 +137,19 @@ module.exports = class TicTacToe extends approve {
         embed.setTimestamp();
       }
 
-      if (this.options.embed.footer.iconURL) {
-        embed.setFooter({
-          text: this.options.embed.footer.text,
-        });
+      if (this.options.embed.footerEnabled) {
+        if (this.options.embed.footer.iconURL) {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+          });
+        }
+        else (!this.options.embed.footer.iconURL); {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+            iconURL: this.options.embed.footer.iconURL
+          });
+        };
       }
-      else (!this.options.embed.footer.iconURL); {
-        embed.setFooter({
-          text: this.options.embed.footer.text,
-          iconURL: this.options.embed.footer.iconURL
-        });
-      };
 
       return await msg.edit({ embeds: [embed], components: this.getComponents() });
     })
@@ -176,10 +172,11 @@ module.exports = class TicTacToe extends approve {
       .setTitle(this.options.embed.title)
       .addFields({ name: this.options.embed.overTitle, value: this.getTurnMessage(result + 'Message') })
 
-      if (this.options.embed.timestamp) {
-        embed.setTimestamp();
-      }
+    if (this.options.embed.timestamp) {
+      embed.setTimestamp();
+    }
 
+    if (this.options.embed.footerEnabled) {
       if (this.options.embed.footer.iconURL) {
         embed.setFooter({
           text: this.options.embed.footer.text,
@@ -191,6 +188,7 @@ module.exports = class TicTacToe extends approve {
           iconURL: this.options.embed.footer.iconURL
         });
       };
+    };
 
     return await msg.edit({ embeds: [embed], components: disableButtons(this.getComponents()) });
   }
@@ -203,22 +201,20 @@ module.exports = class TicTacToe extends approve {
 
 
   hasWonGame(player) {
-    if (this.gameBoard[0] === this.gameBoard[4] && this.gameBoard[0] === this.gameBoard[8] && this.gameBoard[0] === player) {
-      return true;
-    } else if (this.gameBoard[6] === this.gameBoard[4] && this.gameBoard[6] === this.gameBoard[2] && this.gameBoard[6] === player) {
+    if ((this.gameBoard[0] === this.gameBoard[4] && this.gameBoard[0] === this.gameBoard[8] && this.gameBoard[0] === player) ||
+      (this.gameBoard[6] === this.gameBoard[4] && this.gameBoard[6] === this.gameBoard[2] && this.gameBoard[6] === player)) {
       return true;
     }
+
     for (let i = 0; i < 3; ++i) {
-      if (this.gameBoard[i * 3] === this.gameBoard[i * 3 + 1] && this.gameBoard[i * 3] === this.gameBoard[i * 3 + 2] && this.gameBoard[i * 3] === player) {
-        return true;
-      }
-      if (this.gameBoard[i] === this.gameBoard[i + 3] && this.gameBoard[i] === this.gameBoard[i + 6] && this.gameBoard[i] === player) {
+      if ((this.gameBoard[i * 3] === this.gameBoard[i * 3 + 1] && this.gameBoard[i * 3] === this.gameBoard[i * 3 + 2] && this.gameBoard[i * 3] === player) ||
+        (this.gameBoard[i] === this.gameBoard[i + 3] && this.gameBoard[i] === this.gameBoard[i + 6] && this.gameBoard[i] === player)) {
         return true;
       }
     }
+
     return false;
   }
-
 
   getPlayerEmoji() {
     return this.player1Turn ? this.options.emojis.xButton : this.options.emojis.oButton;

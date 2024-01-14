@@ -15,6 +15,8 @@ module.exports = class TwoZeroFourEight extends events {
     if (!options.embed) options.embed = {};
     if (!options.embed.title) options.embed.title = '2048';
     if (!options.embed.color) options.embed.color = '#5865F2';
+    if (!options.embed.fields) options.embed.fields = [];
+    if (!options.embed.footer) options.embed.footer = {};
 
     if (!options.emojis) options.emojis = {};
     if (!options.emojis.up) options.emojis.up = '⬆️';
@@ -156,8 +158,41 @@ module.exports = class TwoZeroFourEight extends events {
         .setTitle(this.options.embed.title)
         .setColor(this.options.embed.color)
         .setImage('attachment://gameboard.png')
-        .addFields({ name: 'Current Score', value: this.score.toString() })
-        .setFooter({ text: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) });
+
+      if (this.options.embed.fields) {
+        for (const field of this.options.embed.fields) {
+          const replacedValue = field.value
+            .replace('{player.tag}', this.message.author.tag)
+            .replace('{player.username}', this.message.author.username)
+            .replace('{player}', `<@!${this.message.author.id}>`)
+            .replace('{player.displayName}', this.message.author.displayName)
+            .replace('{score}', this.score.toString());
+
+          embed.addFields({
+            name: field.name,
+            value: replacedValue,
+            inline: field.inline || false,
+          });
+        }
+      }
+
+      if (this.options.embed.timestamp) {
+        embed.setTimestamp();
+      }
+
+      if (this.options.embed.footerEnabled) {
+        if (this.options.embed.footer.iconURL) {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+          });
+        }
+        else (!this.options.embed.footer.iconURL); {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+            iconURL: this.options.embed.footer.iconURL
+          });
+        };
+      }
 
       return msg.edit({ embeds: [embed], files: [await this.getBoardImage()], attachments: [] });
     })

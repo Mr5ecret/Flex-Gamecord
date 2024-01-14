@@ -7,13 +7,13 @@ module.exports = class Approve extends events {
   constructor(options = {}) {
 
     if (!options.embed) options.embed = {};
-    // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
     if (!options.embed.footer) options.embed.footer = {};
     if (!options.embed.timestamp) options.embed.timestamp = false;
     if (!options.embed.requestTitle) options.embed.requestTitle = options.embed.title;
     if (!options.embed.requestColor) options.embed.requestColor = options.embed.color;
     if (!options.embed.rejectTitle) options.embed.rejectTitle = options.embed.title;
     if (!options.embed.rejectColor) options.embed.rejectColor = options.embed.color;
+    if (!options.embed.footerEnabled) options.embed.footerEnabled = false;
 
     if (!options.buttons) options.buttons = {};
     if (!options.buttons.accept) options.buttons.accept = 'Accept';
@@ -40,7 +40,6 @@ module.exports = class Approve extends events {
 
   async approve() {
     return new Promise(async resolve => {
-      // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
       const embed = new EmbedBuilder()
         .setColor(this.options.embed.requestColor)
         .setTitle(this.options.embed.requestTitle)
@@ -50,17 +49,19 @@ module.exports = class Approve extends events {
         embed.setTimestamp();
       }
 
-      if (this.options.embed.footer.iconURL) {
-        embed.setFooter({
-          text: this.options.embed.footer.text,
-        });
+      if (this.options.embed.footerEnabled) {
+        if (this.options.embed.footer.iconURL) {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+          });
+        }
+        else (!this.options.embed.footer.iconURL); {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+            iconURL: this.options.embed.footer.iconURL
+          });
+        };
       }
-      else (!this.options.embed.footer.iconURL); {
-        embed.setFooter({
-          text: this.options.embed.footer.text,
-          iconURL: this.options.embed.footer.iconURL
-        });
-      };
 
       const btn1 = new ButtonBuilder().setLabel(this.options.buttons.accept).setCustomId('approve_accept').setStyle('SUCCESS');
       const btn2 = new ButtonBuilder().setLabel(this.options.buttons.reject).setCustomId('approve_reject').setStyle('DANGER');
@@ -129,8 +130,14 @@ module.exports = class Approve extends events {
     let player1 = (!this.player1Turn) ? opponent : message.author;
     let content = options[contentMsg];
 
-    content = content.replace('{player.tag}', player1.tag).replace('{player.username}', player1.username).replace('{player}', `<@!${player1.id}>`);
-    content = content.replace('{opponent.tag}', opponent.tag).replace('{opponent.username}', opponent.username).replace('{opponent}', `<@!${opponent.id}>`);
+    content = content.replace('{player.tag}', player1.tag)
+      .replace('{player.username}', player1.username)
+      .replace('{player}', `<@!${player1.id}>`)
+      .replace('{player.displayName}', player1.displayName);
+    content = content.replace('{opponent.tag}', opponent.tag)
+      .replace('{opponent.username}', opponent.username)
+      .replace('{opponent}', `<@!${opponent.id}>`)
+      .replace('{opponent.displayName}', opponent.displayName);
     return content;
   }
 }
