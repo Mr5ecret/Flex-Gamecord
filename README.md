@@ -2,95 +2,43 @@
   <img src="https://github.com/Paeonic-Development/.github/blob/main/images/Paeonic.png" alt="PΛΞ0NIC Development Banner">
 </div>
 
-
+---
 <div align="center">
-  <h3>Edited By Mr5ecret X PΛΞ0NIC Development</h3>
-  <h4>Used in PΛΞ0NIC Development Discord Bot!</h4>
+  <h2>ℹ️ Info</h2>
+  <p><b>Discord flex-gamecord is a powerful npm package with a collection of minigames for your discord bot</b></p>
+  <p><b>Edited By Mr5ecret X PΛΞ0NIC Development & used in PΛΞ0NIC Development Discord Bot!</b><p>
+  <p><b>Original repo you can find <a href="https://github.com/aniket091/Gamecord">here</a></b><p>
 </div>
 
 ---
-<p align="center">
-  <img src="https://cdn.discordapp.com/attachments/818900078077018162/1042159279597166682/banner.png" alt="gamecord" />
-</p>
+<div align="center">
+  <h2>⚙️ Installation</h2>
+  <p><b>Install flex-gamecord discord.js v14 use</b></p>
+  <p><code>npm i github:Paeonic-Development/Flex-Gamecord</code></p>
+</div>
 
-<p align="center">
-  <a href="https://www.npmjs.com/package/discord-gamecord">
-    <img src="https://img.shields.io/npm/dt/discord-gamecord?style=for-the-badge" alt="npm" />
-  </a>
+---
+<div align="center">
+  <h2>✨ Features</h2>
+  <p>Easy to use.</p>
+  <p>Beginner friendly.</p>
+  <p>Slash Commands Games.</p>
+  <p>Supports Discord.js v14</p>
+</div>
 
-  <a href="https://discord.gg/invite/GaczkwfgV9">
-    <img src="https://img.shields.io/discord/800631529351938089?color=5865F2&label=Aniket&style=for-the-badge" alt="Discord Server" />
-  </a>
-</p>
+---
+<div align="center">
+  <h2>📚 New Usage</h2>
+  <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/2048-Game">2048 Game</a>
+  <a>|</a>
+  <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/Tic-Tac-Toe">Tic Tac Toe</a>
+</div>
 
-> **Discord Gamecord is a powerful npm package with a collection of minigames for your discord bot :)**
+---
+<div align="center">
+  <h2>📷 Preview</h2>
+  <img src="https://cdn.discordapp.com/attachments/818900078077018162/1042159356780757072/Preview.png">
+</div>
 
-## **⚙️ Installation** 
+---
 
-### Install flex-gamecord discord.js v14 use
-```sh
-npm i github:Paeonic-Development/Flex-Gamecord
-```
-
-## **✨ Features**
-
-- Easy to use.
-- Beginner friendly.
-- Slash Commands Games.
-- Supports Discord.js v14.
-
-
-## **📚 Usage**
-```js
-const { TicTacToe } = require('flex-gamecord');
-
-try {
-    const opponent = interaction.options.getUser('opponent');
-    const Game = new TicTacToe({
-      message: interaction,
-      isSlashGame: true,
-      opponent: opponent,
-      embed: {
-        title: 'Tic Tac Toe',
-        color: embedColor,
-        statusTitle: 'Status',
-        overTitle: 'Game Over',
-        /** // Edited by Mr5ecret [dev-4.2.1] [footer/timestamp]
-        footer: {
-          text: `${interaction.guild.name} || ${client.user.username} 🌟 PΛΞ0NIC`,
-          iconURL: client.user.displayAvatarURL({ format: 'png' }),
-        },
-        timestamp: false,
-        */
-      },
-      emojis: {
-        xButton: '❌',
-        oButton: '🔵',
-        blankButton: '➖'
-      },
-      mentionUser: true,
-      timeoutTime: 60000,
-      xButtonStyle: 'DANGER',
-      oButtonStyle: 'PRIMARY',
-      turnMessage: `\`\`\`fix\n{emoji} | It\'s the turn of player {player.username}.\`\`\``,
-      winMessage: `\`\`\`fix\n{emoji} | {player.username} won the TicTacToe Game.\`\`\``,
-      tieMessage: `\`\`\`fix\nThe Game tied! No one won the Game!\`\`\``,
-      timeoutMessage: `\`\`\`fix\nThe Game went unfinished! No one won the Game!\`\`\``,
-      requestMessage: `\`\`\`fix\n{player.username} has invited you for a round of Tic Tac Toe.\`\`\``,
-      rejectMessage: `\`\`\`fix\nThe player denied your request for a round of Tic Tac Toe.\`\`\``,
-      playerOnlyMessage: `\`\`\`fix\nOnly {player.username} and {opponent.username} can use these buttons.\`\`\``,
-    });
- 
-    Game.startGame();
-    Game.on('gameOver', result => {
-      console.log(result);
-    });
-  } catch (error) {
-    console.error(error);
-    interaction.followUp('An error occurred while starting the game.');
-  }
-```
-
-
-## **📷 Preview**
-<img src="https://cdn.discordapp.com/attachments/818900078077018162/1042159356780757072/Preview.png">
