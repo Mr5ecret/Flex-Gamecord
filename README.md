@@ -15,7 +15,7 @@
 <div align="center">
   <h2>⚙️ Installation</h2>
   <p><b>Install flex-gamecord discord.js v14 use</b></p>
-  <p><code>npm i github:Paeonic-Development/Flex-Gamecord</code></p>
+  <p><code>npm i flex-gamecord</code></p>
 </div>
 
 ---
