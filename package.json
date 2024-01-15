@@ -6,17 +6,15 @@
  "scripts": {
   "test": "cd test && node ./test.js"
  },
- "authors": [
-  {
-   "name": "Paeonic-Development",
-   "url": "https://github.com/Paeonic-Development"
-  },
+ "author": {
+  "name": "Paeonic-Development",
+  "url": "https://github.com/Paeonic-Development"
+ },
+ "contributors": [
   {
    "name": "Mr5ecret",
    "url": "https://github.com/Mr5ecret"
-  }
- ],
- "contributors": [
+  },
   {
    "name": "aniket091",
    "url": "https://github.com/aniket091"
