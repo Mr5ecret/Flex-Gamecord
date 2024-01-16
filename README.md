@@ -4,12 +4,21 @@
 
 ---
 <div align="center">
+  <a href="https://www.npmjs.com/package/flex-gamecord" target="_blank">
+    <img alt="npm version" src="https://img.shields.io/npm/v/flex-gamecord?style=flat&logo=npm">
+  </a>
+  <a href="https://www.npmjs.com/package/flex-gamecord" target="_blank">
+    <img alt="npm downloads" src="https://img.shields.io/npm/dt/flex-gamecord?style=flat&logo=npm">
+  </a>
+</div>
+
+---
+<div align="center">
   <h2>ℹ️ Info</h2>
   <p><b>Discord flex-gamecord is a powerful npm package with a collection of minigames for your discord bot</b></p>
   <p><b>Edited By Mr5ecret X PΛΞ0NIC Development & used in PΛΞ0NIC Development Discord Bot!</b><p>
   <p><b>Original repo you can find <a href="https://github.com/aniket091/Gamecord">here</a></b><p>
 </div>
-
 
 ---
 <div align="center">
