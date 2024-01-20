@@ -17,3 +17,4 @@ module.exports.Slots = require('./src/Slots');
 module.exports.Snake = require('./src/Snake');
 module.exports.Trivia = require('./src/Trivia');
 module.exports.Wordle = require('./src/Wordle');
+module.exports.MagicEightBall = require('./src/8Ball');

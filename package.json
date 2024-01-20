@@ -1,20 +1,23 @@
 {
  "name": "flex-gamecord",
- "version": "4.2.4",
+ "version": "4.2.5",
  "description": "Discord Gamecord is a powerful npm package with a collection of minigames for your discord bot",
  "main": "index.js",
  "scripts": {
-  "test": "cd test && node ./test.js"
+  "ts": "cd test && node ./test.js",
+  "test": "cd test && node ./index.js"
  },
- "author": {
-  "name": "Paeonic-Development",
-  "url": "https://github.com/Paeonic-Development"
- },
- "contributors": [
+ "authors": [
+  {
+   "name": "Paeonic-Development",
+   "url": "https://github.com/Paeonic-Development"
+  },
   {
    "name": "Mr5ecret",
    "url": "https://github.com/Mr5ecret"
-  },
+  }
+ ],
+ "contributors": [
   {
    "name": "aniket091",
    "url": "https://github.com/aniket091"
@@ -26,8 +29,7 @@
   "canvas": "^2.11.2",
   "discord.js": "^14.14.1",
   "html-entities": "^2.3.3",
-  "node-fetch": "^2.6.7",
-  "owner": "^0.1.0"
+  "node-fetch": "^2.6.7"
  },
  "repository": {
   "type": "git",

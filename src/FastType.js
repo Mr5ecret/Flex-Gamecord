@@ -48,18 +48,18 @@ module.exports = class FastType extends events {
 
   async startGame() {
     if (this.options.isSlashGame || !this.message.author) {
-      if (!this.message.deferred) await this.message.deferReply().catch(e => {});
+      if (!this.message.deferred) await this.message.deferReply().catch(e => { });
       this.message.author = this.message.user;
       this.options.isSlashGame = true;
     }
 
 
     const embed = new EmbedBuilder()
-    .setColor(this.options.embed.color)
-    .setTitle(this.options.embed.title)
-    .setDescription(this.options.embed.description.replace('{time}', (this.options.timeoutTime/1000)))
-    .addFields({ name: 'Sentence', value: this.options.sentence.split(' ').map(e => '`'+ e.split('').join(' ')+'`').join(' ') })
-    .setAuthor({ name: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) })
+      .setColor(this.options.embed.color)
+      .setTitle(this.options.embed.title)
+      .setDescription(this.options.embed.description.replace('{time}', (this.options.timeoutTime / 1000)))
+      .addFields({ name: 'Sentence', value: this.options.sentence.split(' ').map(e => '`' + e.split('').join(' ') + '`').join(' ') })
+      .setAuthor({ name: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) })
 
 
     const msg = await this.sendMessage({ embeds: [embed] });
@@ -90,11 +90,11 @@ module.exports = class FastType extends events {
 
 
     const embed = new EmbedBuilder()
-    .setColor(this.options.embed.color)
-    .setTitle(this.options.embed.title)
-    .setDescription(GameOverMessage.replace('{time}', Math.floor((this.timeTaken / 1000) % 60)).replace('{wpm}', this.wpm))
-    .setAuthor({ name: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) })
-    .setTimestamp()
+      .setColor(this.options.embed.color)
+      .setTitle(this.options.embed.title)
+      .setDescription(GameOverMessage.replace('{time}', Math.floor((this.timeTaken / 1000) % 60)).replace('{wpm}', this.wpm))
+      .setAuthor({ name: this.message.author.tag, iconURL: this.message.author.displayAvatarURL({ dynamic: true }) })
+      .setTimestamp()
 
     return msg.edit({ embeds: [embed] });
   }

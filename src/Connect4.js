@@ -18,6 +18,7 @@ module.exports = class Connect4 extends approve {
     if (!options.embed.title) options.embed.title = 'Connect4 Game';
     if (!options.embed.statusTitle) options.embed.statusTitle = 'Status';
     if (!options.embed.color) options.embed.color = '#5865F2';
+    if (!options.embed.footer) options.embed.footer = {};
 
     if (!options.emojis) options.emojis = {};
     if (!options.emojis.board) options.emojis.board = '⚪';
@@ -38,6 +39,9 @@ module.exports = class Connect4 extends approve {
     if (typeof options.embed.title !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
     if (typeof options.embed.statusTitle !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
     if (typeof options.embed.color !== 'string') throw new TypeError('INVALID_EMBED: embed color must be a string.');
+    if (typeof options.embed.footerEnabled !== 'boolean') throw new TypeError('INVALID_FOOTER: footerEnabled option must be a boolean.');
+    if (typeof options.embed.timestamp !== 'boolean') throw new TypeError('INVALID_TIMESTAMP: timestamp option must be a boolean.');
+
     if (typeof options.emojis !== 'object') throw new TypeError('INVALID_EMOJIS: emojis option must be an object.');
     if (typeof options.emojis.board !== 'string') throw new TypeError('INVALID_EMOJIS: board emoji must be a string.');
     if (typeof options.emojis.player1 !== 'string') throw new TypeError('INVALID_EMOJIS: player1 emoji must be a string.');
@@ -88,7 +92,7 @@ module.exports = class Connect4 extends approve {
 
   async startGame() {
     if (this.options.isSlashGame || !this.message.author) {
-      if (!this.message.deferred) await this.message.deferReply().catch(e => {});
+      if (!this.message.deferred) await this.message.deferReply().catch(e => { });
       this.message.author = this.message.user;
       this.options.isSlashGame = true;
     }
@@ -101,11 +105,27 @@ module.exports = class Connect4 extends approve {
   async connect4Game(msg) {
 
     const embed = new EmbedBuilder()
-    .setColor(this.options.embed.color)
-    .setTitle(this.options.embed.title)
-    .setDescription(this.getBoardContent())
-    .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() })
-    .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
+      .setColor(this.options.embed.color)
+      .setTitle(this.options.embed.title)
+      .setDescription(this.getBoardContent())
+      .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() })
+
+    if (this.options.embed.timestamp) {
+      embed.setTimestamp();
+    }
+    if (this.options.embed.footerEnabled) {
+      if (this.options.embed.footer.iconURL) {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+        });
+      }
+      else (!this.options.embed.footer.iconURL); {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+          iconURL: this.options.embed.footer.iconURL
+        });
+      };
+    }
 
 
     const btn1 = new ButtonBuilder().setStyle(this.options.buttonStyle).setEmoji('1️⃣').setCustomId('connect4_1');
@@ -127,7 +147,7 @@ module.exports = class Connect4 extends approve {
     const collector = msg.createMessageComponentCollector({ idle: this.options.timeoutTime });
 
     collector.on('collect', async btn => {
-      await btn.deferUpdate().catch(e => {});
+      await btn.deferUpdate().catch(e => { });
       if (btn.user.id !== this.message.author.id && btn.user.id !== this.opponent.id) {
         if (this.options.playerOnlyMessage) btn.followUp({ content: formatMessage(this.options, 'playerOnlyMessage'), ephemeral: true });
         return;
@@ -160,18 +180,18 @@ module.exports = class Connect4 extends approve {
 
 
       const embed = new EmbedBuilder()
-      .setColor(this.options.embed.color)
-      .setTitle(this.options.embed.title)
-      .setDescription(this.getBoardContent())
-      .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() })
-      .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
+        .setColor(this.options.embed.color)
+        .setTitle(this.options.embed.title)
+        .setDescription(this.getBoardContent())
+        .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() })
+        .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
 
       return await msg.edit({ embeds: [embed], components: msg.components });
     })
 
     collector.on('end', async (_, reason) => {
       if (reason === 'idle' || reason === 'user') {
-        return this.gameOver(msg, (reason === 'idle') ? 'timeout': (this.isBoardFull() ? 'tie' : 'win'));
+        return this.gameOver(msg, (reason === 'idle') ? 'timeout' : (this.isBoardFull() ? 'tie' : 'win'));
       }
     });
   }
@@ -180,15 +200,15 @@ module.exports = class Connect4 extends approve {
   async gameOver(msg, result) {
     const Connect4Game = { player: this.message.author, opponent: this.opponent };
     if (result === 'win') Connect4Game.winner = this.player1Turn ? this.message.author.id : this.opponent.id;
-    this.emit('gameOver',  { result: result, ...Connect4Game });
+    this.emit('gameOver', { result: result, ...Connect4Game });
 
 
     const embed = new EmbedBuilder()
-    .setColor(this.options.embed.color)
-    .setTitle(this.options.embed.title)
-    .setDescription(this.getBoardContent())
-    .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage(result + 'Message') })
-    .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
+      .setColor(this.options.embed.color)
+      .setTitle(this.options.embed.title)
+      .setDescription(this.getBoardContent())
+      .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage(result + 'Message') })
+      .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
 
     return msg.edit({ embeds: [embed], components: disableButtons(msg.components) });
   }
@@ -229,7 +249,7 @@ module.exports = class Connect4 extends approve {
     for (let i = Math.max(0, blockY - 3); i <= blockY; i++) {
       const adj = blockX + (i * 7);
       if (i + 3 < 6) {
-        if (board[adj] === chip && board[adj + 7] === chip && board[adj + (2*7)] === chip && board[adj + (3*7)] === chip) return true;
+        if (board[adj] === chip && board[adj + 7] === chip && board[adj + (2 * 7)] === chip && board[adj + (3 * 7)] === chip) return true;
       }
     }
 
@@ -238,7 +258,7 @@ module.exports = class Connect4 extends approve {
       const block = { x: blockX + i, y: blockY + i };
       const adj = block.x + (block.y * 7);
       if ((block.x + 3) < 7 && (block.y + 3) < 6) {
-        if (board[adj] === chip && board[adj +(7)+ 1] === chip && board[adj +(2*7)+ 2] === chip && board[adj +(3*7)+ 3] === chip) return true;
+        if (board[adj] === chip && board[adj + (7) + 1] === chip && board[adj + (2 * 7) + 2] === chip && board[adj + (3 * 7) + 3] === chip) return true;
       }
     }
 
@@ -247,7 +267,7 @@ module.exports = class Connect4 extends approve {
       const block = { x: blockX + i, y: blockY - i };
       const adj = block.x + (block.y * 7);
       if ((block.x + 3) < 7 && (block.y - 3) >= 0 && block.x >= 0) {
-        if (board[adj] === chip && board[adj -(7)+ 1] === chip && board[adj -(2*7)+ 2] === chip && board[adj -(3*7)+ 3] === chip) return true;
+        if (board[adj] === chip && board[adj - (7) + 1] === chip && board[adj - (2 * 7) + 2] === chip && board[adj - (3 * 7) + 3] === chip) return true;
       }
     }
     return false;

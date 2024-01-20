@@ -42,6 +42,9 @@ module.exports = class TicTacToe extends approve {
     if (typeof options.embed.statusTitle !== 'string') throw new TypeError('INVALID_EMBED: status title must be a string.');
     if (typeof options.embed.overTitle !== 'string') throw new TypeError('INVALID_EMBED: over title must be a string.');
     if (typeof options.embed.color !== 'string') throw new TypeError('INVALID_EMBED: embed color must be a string.');
+    if (typeof options.embed.footerEnabled !== 'boolean') throw new TypeError('INVALID_FOOTER: footerEnabled option must be a boolean.');
+    if (typeof options.embed.timestamp !== 'boolean') throw new TypeError('INVALID_TIMESTAMP: timestamp option must be a boolean.');
+
     if (typeof options.emojis !== 'object') throw new TypeError('INVALID_EMOJIS: emojis option must be an object.');
     if (typeof options.emojis.xButton !== 'string') throw new TypeError('INVALID_EMOJIS: xButton emoji must be a string.');
     if (typeof options.emojis.oButton !== 'string') throw new TypeError('INVALID_EMOJIS: oButton emoji must be a string.');

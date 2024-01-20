@@ -30,6 +30,9 @@ module.exports = class TwoZeroFourEight extends events {
     if (typeof options.embed !== 'object') throw new TypeError('INVALID_EMBED: embed option must be an object.');
     if (typeof options.embed.title !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
     if (typeof options.embed.color !== 'string') throw new TypeError('INVALID_EMBED: embed color must be a string.');
+    if (typeof options.embed.footerEnabled !== 'boolean') throw new TypeError('INVALID_FOOTER: footerEnabled option must be a boolean.');
+    if (typeof options.embed.timestamp !== 'boolean') throw new TypeError('INVALID_TIMESTAMP: timestamp option must be a boolean.');
+
     if (typeof options.emojis !== 'object') throw new TypeError('INVALID_EMOJIS: emojis option must be an object.');
     if (typeof options.emojis.up !== 'string') throw new TypeError('INVALID_EMOJIS: up emoji must be an string.');
     if (typeof options.emojis.down !== 'string') throw new TypeError('INVALID_EMOJIS: down emoji must be an string.');
