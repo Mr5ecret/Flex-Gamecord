@@ -2,39 +2,31 @@ const { disableButtons, formatMessage, ButtonBuilder } = require('../utils/utils
 const { EmbedBuilder, ActionRowBuilder } = require('discord.js');
 const approve = require('../utils/approve');
 
+function getRandomColor() {
+  return '#' + ((Math.random() * 0xffffff) << 0).toString(16).padStart(6, '0');
+}
 
 module.exports = class Connect4 extends approve {
   constructor(options = {}) {
 
+    // Game Options
     if (!options.isSlashGame) options.isSlashGame = false;
     if (!options.message) throw new TypeError('NO_MESSAGE: No message option was provided.');
     if (!options.opponent) throw new TypeError('NO_OPPONENT: No opponent option was provided.');
+    if (!options.timeoutTime) options.timeoutTime = 60000;
+    if (!options.buttonStyle) options.buttonStyle = 'PRIMARY';
     if (typeof options.message !== 'object') throw new TypeError('INVALID_MESSAGE: message option must be an object.');
     if (typeof options.isSlashGame !== 'boolean') throw new TypeError('INVALID_COMMAND_TYPE: isSlashGame option must be a boolean.');
     if (typeof options.opponent !== 'object') throw new TypeError('INVALID_OPPONENT: opponent option must be an object.');
+    if (typeof options.timeoutTime !== 'number') throw new TypeError('INVALID_TIME: Timeout time option must be a number.');
+    if (typeof options.buttonStyle !== 'string') throw new TypeError('INVALID_BUTTON_STYLE: button style must be a string.');
 
-
+    // Embed Options
     if (!options.embed) options.embed = {};
     if (!options.embed.title) options.embed.title = 'Connect4 Game';
     if (!options.embed.statusTitle) options.embed.statusTitle = 'Status';
     if (!options.embed.color) options.embed.color = '#5865F2';
     if (!options.embed.footer) options.embed.footer = {};
-
-    if (!options.emojis) options.emojis = {};
-    if (!options.emojis.board) options.emojis.board = '⚪';
-    if (!options.emojis.player1) options.emojis.player1 = '🔴';
-    if (!options.emojis.player2) options.emojis.player2 = '🟡';
-
-    if (!options.timeoutTime) options.timeoutTime = 60000;
-    if (!options.buttonStyle) options.buttonStyle = 'PRIMARY';
-    if (!options.turnMessage) options.turnMessage = '{emoji} | Its turn of player **{player}**.';
-    if (!options.winMessage) options.winMessage = '{emoji} | **{player}** won the Connect4 Game.';
-    if (!options.tieMessage) options.tieMessage = 'The Game tied! No one won the Game!';
-    if (!options.timeoutMessage) options.timeoutMessage = 'The Game went unfinished! No one won the Game!';
-    if (!options.requestMessage) options.requestMessage = '{player} has invited you for a round of **Connect4**.';
-    if (!options.rejectMessage) options.rejectMessage = 'The player denied your request for a round of **Connect4**.';
-
-
     if (typeof options.embed !== 'object') throw new TypeError('INVALID_EMBED: embed option must be an object.');
     if (typeof options.embed.title !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
     if (typeof options.embed.statusTitle !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
@@ -42,12 +34,29 @@ module.exports = class Connect4 extends approve {
     if (typeof options.embed.footerEnabled !== 'boolean') throw new TypeError('INVALID_FOOTER: footerEnabled option must be a boolean.');
     if (typeof options.embed.timestamp !== 'boolean') throw new TypeError('INVALID_TIMESTAMP: timestamp option must be a boolean.');
 
+    // Rainbow Embed Color Options
+    if (!options.embed.winnerColor) options.embed.winnerColor = false;
+    if (!options.embed.winnerColorInterval) options.embed.winnerColorInterval = 1000;
+    if (typeof options.embed.winnerColor !== 'boolean') throw new TypeError('INVALID_WINNER_COLOR: winnerColor option must be a boolean.');
+    if (typeof options.embed.winnerColorInterval !== 'number') throw new TypeError('INVALID_WINNER_COLOR_INTERVAL: winnerColorInterval option must be a number.');
+
+    // Emoji Options
+    if (!options.emojis) options.emojis = {};
+    if (!options.emojis.board) options.emojis.board = '⚪';
+    if (!options.emojis.player1) options.emojis.player1 = '🔴';
+    if (!options.emojis.player2) options.emojis.player2 = '🟡';
     if (typeof options.emojis !== 'object') throw new TypeError('INVALID_EMOJIS: emojis option must be an object.');
     if (typeof options.emojis.board !== 'string') throw new TypeError('INVALID_EMOJIS: board emoji must be a string.');
     if (typeof options.emojis.player1 !== 'string') throw new TypeError('INVALID_EMOJIS: player1 emoji must be a string.');
     if (typeof options.emojis.player2 !== 'string') throw new TypeError('INVALID_EMOJIS: player2 emoji must be a string.');
-    if (typeof options.timeoutTime !== 'number') throw new TypeError('INVALID_TIME: Timeout time option must be a number.');
-    if (typeof options.buttonStyle !== 'string') throw new TypeError('INVALID_BUTTON_STYLE: button style must be a string.');
+
+    // Message Options
+    if (!options.turnMessage) options.turnMessage = '{emoji} | Its turn of player **{player}**.';
+    if (!options.winMessage) options.winMessage = '{emoji} | **{player}** won the Connect4 Game.';
+    if (!options.tieMessage) options.tieMessage = 'The Game tied! No one won the Game!';
+    if (!options.timeoutMessage) options.timeoutMessage = 'The Game went unfinished! No one won the Game!';
+    if (!options.requestMessage) options.requestMessage = '{player} has invited you for a round of **Connect4**.';
+    if (!options.rejectMessage) options.rejectMessage = 'The player denied your request for a round of **Connect4**.';
     if (typeof options.turnMessage !== 'string') throw new TypeError('INVALID_MESSAGE: Turn message must be a string.');
     if (typeof options.winMessage !== 'string') throw new TypeError('INVALID_MESSAGE: Win message must be a string.');
     if (typeof options.tieMessage !== 'string') throw new TypeError('INVALID_MESSAGE: Tie message must be a string.');
@@ -127,7 +136,6 @@ module.exports = class Connect4 extends approve {
       };
     }
 
-
     const btn1 = new ButtonBuilder().setStyle(this.options.buttonStyle).setEmoji('1️⃣').setCustomId('connect4_1');
     const btn2 = new ButtonBuilder().setStyle(this.options.buttonStyle).setEmoji('2️⃣').setCustomId('connect4_2');
     const btn3 = new ButtonBuilder().setStyle(this.options.buttonStyle).setEmoji('3️⃣').setCustomId('connect4_3');
@@ -141,7 +149,6 @@ module.exports = class Connect4 extends approve {
     msg = await msg.edit({ content: null, embeds: [embed], components: [row1, row2] });
     return this.handleButtons(msg);
   }
-
 
   async handleButtons(msg) {
     const collector = msg.createMessageComponentCollector({ idle: this.options.timeoutTime });
@@ -157,7 +164,6 @@ module.exports = class Connect4 extends approve {
       const column = parseInt(btn.customId.split('_')[1]) - 1;
       const block = { x: -1, y: -1 };
 
-
       for (let y = 6 - 1; y >= 0; y--) {
         const chip = this.gameBoard[column + (y * 7)];
         if (chip === this.options.emojis.board) {
@@ -168,7 +174,6 @@ module.exports = class Connect4 extends approve {
         }
       }
 
-
       if (block.y === 0) {
         const components = msg.components[(column > 3) ? 1 : 0].components;
         if (column > 3) components[column % 4] = ButtonBuilder.from(components[column % 4]).setDisabled(true);
@@ -178,13 +183,29 @@ module.exports = class Connect4 extends approve {
       if (this.foundCheck(block.x, block.y) || this.isBoardFull()) return collector.stop();
       this.player1Turn = !this.player1Turn;
 
-
       const embed = new EmbedBuilder()
         .setColor(this.options.embed.color)
         .setTitle(this.options.embed.title)
         .setDescription(this.getBoardContent())
         .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() })
         .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
+
+      if (this.options.embed.timestamp) {
+        embed.setTimestamp();
+      }
+      if (this.options.embed.footerEnabled) {
+        if (this.options.embed.footer.iconURL) {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+          });
+        }
+        else (!this.options.embed.footer.iconURL); {
+          embed.setFooter({
+            text: this.options.embed.footer.text,
+            iconURL: this.options.embed.footer.iconURL
+          });
+        };
+      }
 
       return await msg.edit({ embeds: [embed], components: msg.components });
     })
@@ -196,12 +217,12 @@ module.exports = class Connect4 extends approve {
     });
   }
 
-
   async gameOver(msg, result) {
     const Connect4Game = { player: this.message.author, opponent: this.opponent };
     if (result === 'win') Connect4Game.winner = this.player1Turn ? this.message.author.id : this.opponent.id;
     this.emit('gameOver', { result: result, ...Connect4Game });
 
+    const originalColor = this.options.embed.color;
 
     const embed = new EmbedBuilder()
       .setColor(this.options.embed.color)
@@ -210,16 +231,58 @@ module.exports = class Connect4 extends approve {
       .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage(result + 'Message') })
       .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
 
-    return msg.edit({ embeds: [embed], components: disableButtons(msg.components) });
-  }
+    if (this.options.embed.timestamp) {
+      embed.setTimestamp();
+    }
+    if (this.options.embed.footerEnabled) {
+      if (this.options.embed.footer.iconURL) {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+        });
+      }
+      else (!this.options.embed.footer.iconURL); {
+        embed.setFooter({
+          text: this.options.embed.footer.text,
+          iconURL: this.options.embed.footer.iconURL
+        });
+      };
+    }
 
+    if (this.options.embed.winnerColor) {
+      const updateColor = () => {
+        const newColor = getRandomColor();
+        embed.setColor(newColor);
+        msg.edit({ embeds: [embed] });
+      };
+
+      const interval = setInterval(updateColor, this.options.embed.winnerColorInterval);
+
+      setTimeout(() => {
+        clearInterval(interval);
+        embed.setColor(originalColor);
+        msg.edit({ embeds: [embed], components: disableButtons(msg.components) });
+      }, 10000);
+    }
+    else {
+      msg.edit({ embeds: [embed], components: disableButtons(msg.components) });
+    }
+  }
 
   getPlayerEmoji() {
     return this.player1Turn ? this.options.emojis.player1 : this.options.emojis.player2;
   }
 
   getTurnMessage(msg) {
-    return this.formatTurnMessage(this.options, (msg ?? 'turnMessage')).replace('{emoji}', this.getPlayerEmoji());
+    return this.formatTurnMessage(this.options, (msg ?? 'turnMessage'))
+      .replace('{emoji}', this.getPlayerEmoji())
+      .replace('{player.tag}', this.message.author.tag)
+      .replace('{player.username}', this.message.author.username)
+      .replace('{player}', `<@!${this.message.author.id}>`)
+      .replace('{player.displayName}', this.message.author.displayName)
+      .replace('{opponent.tag}', this.opponent.tag)
+      .replace('{opponent.username}', this.opponent.username)
+      .replace('{opponent}', `<@!${this.opponent.id}>`)
+      .replace('{opponent.displayName}', this.opponent.displayName);
   }
 
 

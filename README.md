@@ -47,6 +47,8 @@
   <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/Tic-Tac-Toe">Tic Tac Toe</a>
   <a>|</a>
   <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/Magic-8‐Ball">Magic 8 Ball</a>
+  <a>|</a>
+  <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/Connect-4">Connect 4</a>
 </div>
 
 ---

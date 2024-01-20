@@ -4,9 +4,9 @@
 
 <div align="center">
   <h3>🔢 Connect 4</h3>
-  <h4>Simple connect 4 game with buttons</h4>
-  <h4><code>/connect4 @[user]</code></h4>
-  <h4><ins>Edited: Version 4.2.5</ins></h4>
+  <p>Simple connect 4 game with buttons</p>
+  <p><code>/connect4 @[user]</code></p>
+  <p><ins>Edited: Version 4.2.6</ins></p>
 </div>
 
 ---
@@ -21,6 +21,8 @@ const Game = new Connect4({
     title: 'Connect4 Game',
     statusTitle: 'Status',
     color: '#5865F2',
+    winnerColor: false,
+    winnerColorInterval: 1000, // In milliseconds (1000 = 1 second)
     footerEnabled: false,
     footer: {
       text: `PΛΞ0NIC Development`,
@@ -50,22 +52,27 @@ Game.on('gameOver', result => {
 ```
 ---
 <div align="center">
-  <h3>/ Slash Commands</h3>
+  <h3>📝 / Slash Commands</h3>
 </div>
 
 ```js
 message: interaction,
 isSlashGame: true,
-opponent: interaction.options.getUser('user')
 ```
 
 ---
 <div align="center">
-  <h3>Updates</h3>
+  <h3>🆕 Updates</h3>
 </div>
 
-## **`v4.2.5`**
 ```diff
+*** v4.2.6
++ Added winner embed color enable option (edits embed color when someone wins the game)
++ Added winner embed color edit time option in ms
+```
+
+```diff
+*** v4.2.5
 + Added footer/timeStamp option
 + Added option to disable footer
 + Added fields option
