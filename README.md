@@ -28,6 +28,7 @@
   <h2>⚙️ Installation</h2>
   <p><b>Install flex-gamecord discord.js v14 use</b></p>
   <p><code>npm i flex-gamecord</code></p>
+  <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/Prefix-Command">Try prefix command!</a>
 </div>
 
 ---
@@ -49,6 +50,8 @@
   <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/Magic-8‐Ball">Magic 8 Ball</a>
   <a>|</a>
   <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/Connect-4">Connect 4</a>
+  <a>|</a>
+  <a href="https://github.com/Paeonic-Development/Flex-Gamecord/wiki/Fast-Type">Fast Type</a>
 </div>
 
 ---
