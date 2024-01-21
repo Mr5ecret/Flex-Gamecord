@@ -27,6 +27,8 @@ module.exports = class Connect4 extends approve {
     if (!options.embed.statusTitle) options.embed.statusTitle = 'Status';
     if (!options.embed.color) options.embed.color = '#5865F2';
     if (!options.embed.footer) options.embed.footer = {};
+    if (!options.embed.timestamp) options.embed.timestamp = false;
+    if (!options.embed.footerEnabled) options.embed.footerEnabled = false;
     if (typeof options.embed !== 'object') throw new TypeError('INVALID_EMBED: embed option must be an object.');
     if (typeof options.embed.title !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
     if (typeof options.embed.statusTitle !== 'string') throw new TypeError('INVALID_EMBED: embed title must be a string.');
@@ -80,7 +82,6 @@ module.exports = class Connect4 extends approve {
     }
   }
 
-
   getBoardContent() {
     let board = '';
     for (let y = 0; y < 6; y++) {
@@ -92,7 +93,6 @@ module.exports = class Connect4 extends approve {
     board += '1️⃣2️⃣3️⃣4️⃣5️⃣6️⃣7️⃣';
     return board;
   }
-
 
   async sendMessage(content) {
     if (this.options.isSlashGame) return await this.message.editReply(content);
@@ -109,7 +109,6 @@ module.exports = class Connect4 extends approve {
     const approve = await this.approve();
     if (approve) this.connect4Game(approve);
   }
-
 
   async connect4Game(msg) {
 
@@ -188,7 +187,6 @@ module.exports = class Connect4 extends approve {
         .setTitle(this.options.embed.title)
         .setDescription(this.getBoardContent())
         .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage() })
-        .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
 
       if (this.options.embed.timestamp) {
         embed.setTimestamp();
@@ -229,7 +227,6 @@ module.exports = class Connect4 extends approve {
       .setTitle(this.options.embed.title)
       .setDescription(this.getBoardContent())
       .addFields({ name: this.options.embed.statusTitle, value: this.getTurnMessage(result + 'Message') })
-      .setFooter({ text: `${this.message.author.tag} vs ${this.opponent.tag}` })
 
     if (this.options.embed.timestamp) {
       embed.setTimestamp();
@@ -285,7 +282,6 @@ module.exports = class Connect4 extends approve {
       .replace('{opponent.displayName}', this.opponent.displayName);
   }
 
-
   isBoardFull() {
     for (let y = 0; y < 6; y++) {
       for (let x = 0; x < 7; x++) {
@@ -294,7 +290,6 @@ module.exports = class Connect4 extends approve {
     }
     return true;
   }
-
 
   foundCheck(blockX, blockY) {
     const chip = this.getPlayerEmoji();
